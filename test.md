@@ -9,7 +9,7 @@ int main() {
 }
 ```
 
-## Unterüberschrift.
+## Unterüberschrift
 
 - Aufzählungen
 - usw.
