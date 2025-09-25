@@ -7,6 +7,7 @@ nfs benutzt Port 2049, allerdings wird dieser Dienst in Metasploitable 2 über d
 ```sh
 $ nmap --script nfs-showmount -p 111  $META
 ```
+```
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-25 05:18 EDT
 Nmap scan report for 192.168.40.129
 Host is up (0.00041s latency).
