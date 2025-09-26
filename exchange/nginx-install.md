@@ -26,4 +26,85 @@ sudo systemctl enable nginx  # on startup
 ss -tlnp | grep 80 # test
 ```
 
-test
+```sh
+sudo apt update
+sudo apt install php php-fpm
+```
+
+```sh
+$ php -v           
+PHP 8.4.11 (cli) (built: Aug 15 2025 23:34:18) (NTS)
+Copyright (c) The PHP Group
+Built by Debian
+Zend Engine v4.4.11, Copyright (c) Zend Technologies
+    with Zend OPcache v8.4.11, Copyright (c), by Zend Technologies
+```
+
+Also es ist php 8.4
+
+```sh
+sudo systemctl start php8.4-fpm
+sudo systemctl status php8.4-fpm
+
+sudo systemctl enable php8.4-fpm
+```
+
+Bezeichnung des sockets ermittel:
+
+```sh
+sudo find /run/php/ -name "*.sock"
+/run/php/php-fpm.sock
+/run/php/php8.4-fpm.sock
+```
+
+Den String `/run/php/php8.4-fpm.sock` brauchen wir für das nginx Konfigurationsfile:
+
+```sh
+sudo nano /etc/nginx/sites-available/default
+```
+
+Hier `index-php` hinzufügen und den `location ~ \.php$` anpassen (auskommentieren)
+
+```
+server {
+    index index.php ...;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+    }
+
+...
+}
+```
+
+Nginx-Konfiguration testen
+
+```sh
+sudo nginx -t
+```
+
+Nginx-Konfiguration neu starten
+
+```sh
+sudo systemctl reload nginx
+```
+
+Datei erstellen
+
+```sh
+sudo nano /var/www/html/info.php
+```
+
+
+```php
+<?php
+phpinfo();
+?>
+```
+
+Und testen:
+
+```url
+http://localhost/info.php
+```
