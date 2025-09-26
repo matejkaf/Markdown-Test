@@ -108,3 +108,23 @@ Und testen:
 ```url
 http://localhost/info.php
 ```
+
+# Access
+
+Noch nicht getestet
+
+User Kali den Zugriff auf das dir erlauben
+
+User in die Gruppe aufnehmen:
+
+```sh
+sudo usermod -aG www-data kali
+```
+
+setze das Gruppenrecht auf das Verzeichnis. Ursprünglich `root:root`
+
+```
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 775 /var/www/html
+```
+
