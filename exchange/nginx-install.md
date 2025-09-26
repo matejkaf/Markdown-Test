@@ -25,3 +25,5 @@ sudo systemctl start nginx   # starten
 sudo systemctl enable nginx  # on startup
 ss -tlnp | grep 80 # test
 ```
+
+test
