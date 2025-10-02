@@ -1,20 +1,17 @@
+# nginx, PHP und MaraDB auf Kali 2025.3
 
 
-
-```
-──(kali㉿kali)-[~/Markdown-Test]
-└─$ systemctl status nginx
+```sh
+$ systemctl status nginx
 ○ nginx.service - A high performance web server and a reverse proxy server
      Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; preset>
      Active: inactive (dead)
        Docs: man:nginx(8)
 
                                                                              
-┌──(kali㉿kali)-[~/Markdown-Test]
-└─$ ss -tlnp | grep 80    
+$ ss -tlnp | grep 80    
                                                                              
-┌──(kali㉿kali)-[~/Markdown-Test]
-└─$ nginx -v                                
+$ nginx -v                                
 nginx version: nginx/1.26.3
 ```
 
@@ -84,13 +81,13 @@ Nginx-Konfiguration testen
 sudo nginx -t
 ```
 
-Nginx-Konfiguration neu starten
+Nginx-Konfiguration neu starten:
 
 ```sh
 sudo systemctl reload nginx
 ```
 
-Datei erstellen
+php Datei erstellen:
 
 ```sh
 sudo nano /var/www/html/info.php
@@ -161,12 +158,13 @@ Als root wird man nicht nach einem PW gefragt
 $ sudo mysql
 ```
 
-Nun ein PW für root festlegen
 
-```sh
-$ sudo mysql_secure_installation
+```sql
+CREATE USER 'webuser'@'localhost' IDENTIFIED BY 'webuser';
+GRANT ALL PRIVILEGES ON testdb.* TO 'webuser'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
 ```
-
 
 PHP Fehlermeldungen anzeigen für debugging
 
@@ -174,13 +172,56 @@ PHP Fehlermeldungen anzeigen für debugging
 $ sudo tail /var/log/nginx/error.log -f
 ```
 
+
 ```sh
-CREATE DATABASE testdb;
-CREATE USER 'webuser'@'localhost' IDENTIFIED BY 'SicheresPasswort!';
-GRANT ALL PRIVILEGES ON testdb.* TO 'webuser'@'localhost';
-FLUSH PRIVILEGES;
-EXIT;
+$ mysql -u webuser -p'webuser' 
 ```
 
+```sql
+CREATE DATABASE testdb;
+```
 
+```sh
+$ mysql -u webuser -pwebuser testdb
+```
 
+Datenbanktabelle mit Inhalt anlegen:
+
+```sql
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+```sql
+INSERT INTO users (username, email) VALUES
+('maxmustermann', 'max@example.com'),
+('lisamüller', 'lisa@example.com'),
+('hansschmidt', 'hans@example.com');
+SELECT * FROM users;
+```
+
+```php
+<?php
+//phpinfo();
+echo("PHP läuft");
+?>
+
+<?php
+echo("Verbindung zu mysql aufbauen");
+$mysqli = new mysqli("localhost", "webuser", "webuser", "testdb");
+if($mysqli->connect_error) {
+        die("Verbindung fehlgeschlagen: ".$mysqli->connect_error);
+}
+echo("MySQL Verbindung erfolgreich");
+$sql = "SELECT id, username, email, created_at FROM users";
+$result = $mysqli->query($sql);
+while ($row = $result->fetch_assoc()) {
+    echo "{$row['id']}, {$row['username']}, {$row['email']}";
+}
+?>
+
+```
