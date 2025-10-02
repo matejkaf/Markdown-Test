@@ -174,4 +174,13 @@ PHP Fehlermeldungen anzeigen für debugging
 $ sudo tail /var/log/nginx/error.log -f
 ```
 
+```sh
+CREATE DATABASE testdb;
+CREATE USER 'webuser'@'localhost' IDENTIFIED BY 'SicheresPasswort!';
+GRANT ALL PRIVILEGES ON testdb.* TO 'webuser'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+
 
