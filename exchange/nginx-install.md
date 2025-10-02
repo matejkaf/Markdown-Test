@@ -128,3 +128,50 @@ sudo chown -R www-data:www-data /var/www/html
 sudo chmod -R 775 /var/www/html
 ```
 
+# MariaDB
+
+Check ob aufgesetzt:
+
+```sh
+$ dpkg -l | grep mariadb
+```
+
+Check ob service gestartet:
+
+```sh
+$ systemctl status mariadb
+```
+
+Starten und dauerhaft enablen
+
+```sh
+$ sudo systemctl start mariadb    
+$ sudo systemctl enable mariadb
+```
+
+```sh
+$ mysql -u root -p 
+Enter password: 
+ERROR 1698 (28000): Access denied for user 'root'@'localhost'
+```
+
+Als root wird man nicht nach einem PW gefragt
+
+```sh
+$ sudo mysql
+```
+
+Nun ein PW für root festlegen
+
+```sh
+$ sudo mysql_secure_installation
+```
+
+
+PHP Fehlermeldungen anzeigen für debugging
+
+```sh
+$ sudo tail /var/log/nginx/error.log -f
+```
+
+
