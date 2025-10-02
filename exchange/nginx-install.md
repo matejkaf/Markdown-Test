@@ -1,4 +1,4 @@
-# nginx, PHP und MaraDB auf Kali 2025.3
+# nginx, PHP und MariaDB auf Kali 2025.3
 
 
 ```sh
