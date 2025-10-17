@@ -7,3 +7,8 @@
 https://github.com/matejkaf/Markdown-Test/blob/main/berichte/250908.md
 ```
 
+```
+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
+```
+
+
