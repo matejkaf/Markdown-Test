@@ -96,9 +96,13 @@ net.sniff on
 
 
 
-capture filter: `nat` 
+capture filters: `` 
 
-capture filter: `src host 192.168.40.135` 
+```
+nat
+host 192.168.40.135
+src host 192.168.40.135
+```
 
 net.show:
 
