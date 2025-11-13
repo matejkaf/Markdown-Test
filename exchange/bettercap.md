@@ -140,14 +140,21 @@ Aufzeichung nach aktiviertem ARP Spoofing:
 Frame 9: 74 bytes on wire (592 bits), 74 bytes captured (592 bits) on interface eth0, id 0
 Ethernet II, Src: VMware_00:61:1d (00:0c:29:00:61:1d), Dst: VMware_3b:8d:3e (00:0c:29:3b:8d:3e)
 Internet Protocol Version 4, Src: 192.168.40.135, Dst: 44.228.249.3
-Transmission Control Protocol, Src Port: 36752, Dst Port: 80, Seq: 0, Len: 0
+Transmission Control Protocol, Src Port: 43524, Dst Port: 80, Seq: 0, Len: 0
 ```
 
 Das Ziel ist jetzt die MAC Adresse des Attackers, nicht mehr der Router.
 
-Am Wireshark sieht der Traffic jetzt ganz anders aus, es werden auch viele Fehler (Retransmissions) angezeigt.
+Der darauffolgende Frame ist die Weiterleitung des Attackers an den Router (Wireshark zeigt dies als Retransmission an):
 
+```
+Frame 10: 74 bytes on wire (592 bits), 74 bytes captured (592 bits) on interface eth0, id 0
+Ethernet II, Src: VMware_3b:8d:3e (00:0c:29:3b:8d:3e), Dst: VMware_ef:e8:4e (00:50:56:ef:e8:4e)
+Internet Protocol Version 4, Src: 192.168.40.135, Dst: 44.228.249.3
+Transmission Control Protocol, Src Port: 43524, Dst Port: 80, Seq: 0, Len: 0
+```
 
+MAC (Attacker) --> MAC (Router)
 
 
 
