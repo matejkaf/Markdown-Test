@@ -5,7 +5,7 @@ host=192.168.226.2
 
 
 sudo apt update
-sudo apt install bettercap
+sudo apt install bettercap 
 
 
 
